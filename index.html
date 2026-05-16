@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="shortcut icon" href="picture/logo.ico" type="image/x-icon">
+    <script src="script.js" defer></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-yNlHdllG1OkNlFuKpFaVF11NoX9d/3bqEyj1Og2bvRK0da1Oc2yTHi/j0tnCfsrkIM91h9AjfXEZjmLr5Os5xg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Go Market</title>
+</head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+<script src="https://www.gstatic.com/charts/loader.js"></script>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="path/to/jquery.infinitescroll.min.js"></script>
+<body>
+    <div class="body">
+        <div class="sidenav" id="sidenavigation">
+           <div class="logo">
+            <span><img src="picture/logo.ico" alt="">  GoStock</span>
+           </div>
+           <div class="intro-nav">
+<div class="invest">
+    <p id="title">Toptal Investment </p>
+<b id="number">$53941.60</b><span id="percentage">+7.136% <i class="fas fa-arrow-up"></i> </span>
+</div>
+           </div>
+            <div class="links">
+                <a href="#"><i class="fas fa-home"></i> Home</a>
+            <a href="#shares"><i class="fas fa-chart-line"></i> Dashboard</a>
+            <a href="#"><i class="fas fa-wallet"></i> Wallet</a>
+            <a href="#news"><i class="fas fa-newspaper"></i> News</a>
+            <a href="#"><i class="fas fa-users"></i> Our Community</a>
+            <a href="#"><i class="fas fa-cog"></i> Settings</a>
+            <a href="tel:+96170389556"><i class="fas fa-phone"></i> Contact Us</a>
+            </div>
+        </div>
+        <a href="javascript:void(0);" class="bar" onclick="myFunction()">
+          <i class="fa fa-bars "></i>
+      </a>
+        <div class="mobile-container" id="mobile-responsive">
+          <div class="logo">
+            <span><img src="picture/logo.ico" alt="">  GoStock</span>
+           </div>
+           <div class="intro-nav">
+<div class="invest">
+    <p id="title">Toptal Investment </p>
+<b id="number">$53941.60</b><span id="percentage">+7.136% <i class="fas fa-arrow-up"></i> </span>
+</div>
+           </div>
+            <div class="links">
+                <a href="#"><i class="fas fa-home"></i> Home</a>
+            <a href="#shares"><i class="fas fa-chart-line"></i> Dashboard</a>
+            <a href="#"><i class="fas fa-wallet"></i> Wallet</a>
+            <a href="#news"><i class="fas fa-newspaper"></i> News</a>
+            <a href="#"><i class="fas fa-users"></i> Our Community</a>
+            <a href="#"><i class="fas fa-cog"></i> Settings</a>
+            <a href="tel:+96170389556"><i class="fas fa-phone"></i> Contact Us</a>
+            </div>
+            
+        </div>
+        <div class="main">
+           <section id="search-section">
+            <div class="search-container">
+                <i class="fas fa-search"></i>
+                <input type="search" class="search" id="search" placeholder="Search for shares ">
+            </div>
+            <div class="user-settings">
+              <i class="fa fa-regular fa-envelope fa-xl"></i>
+              <i class="fa-regular fa-bell fa-xl"></i>
+              <img src="picture/no-profile-icon.jpg" ><span id="user-account-text">user account</span>
+            </div>
+           </section> 
+           <h2 id="header">Stock Market </h2>
+           <section id="market-container">
+            <div class="market">
+              <span class="shares-precentage" id="gain">+7.34% <i class="fa fa-solid fa-caret-up fa-bounce"></i></span>
+              <div class="market-logo">
+                <img src="picture/logo.ico" alt=""> Logo
+              </div>
+              <div id="total-shares">Shares: <span>77,587</span></div><br>
+              <div id="balance">balance: <span>$30,785,852.67</span></div>
+            </div>
+            <div class="market">
+              <span class="shares-precentage" id="loss">-0.67% <i class="fa fa-solid fa-caret-down fa-bounce"></i></span>
+              <div class="market-logo">
+                <img src="picture/logo.ico" alt=""> Logo
+              </div>
+              <div id="total-shares">Shares: <span>1,236</span></div><br>
+              <div id="balance">balance: <span>$5,371.80</span></div>
+            </div>
+            <div class="market">
+              <span class="shares-precentage" id="loss">-1.18% <i class="fa fa-solid fa-caret-down fa-bounce"></i></span>
+              <div class="market-logo">
+                <img src="picture/logo.ico" alt=""> Logo
+              </div>
+              <div id="total-shares">Shares: <span>5,406</span></div><br>
+              <div id="balance">balance: <span>$2,223.24</span></div>
+            </div>
+            <div class="market">
+              <span class="shares-precentage" id="gain">+2.38% <i class="fa fa-solid fa-caret-up fa-bounce"></i></span>
+              <div class="market-logo">
+                <img src="picture/logo.ico" alt=""> Logo
+              </div>
+              <div id="total-shares">Shares: <span>12,102</span></div><br>
+              <div id="balance">balance: <span>$10,193,208.70</span></div>
+            </div>
+           </section>
+          <section id="table-section">
+            <table>
+              <tr>
+                <th>Company Name</th>
+                <th>Shares</th>
+                <th>Price</th>
+                <th>Change</th>
+              </tr>
+              <tr>
+                <td>TNX</td>
+                <td>2,148</td>
+                <td>$178.00</td>
+                <td class="positive">+2.23% <i class="fa fa-solid fa-caret-up fa-bounce"></i></td>
+              </tr>
+              <tr>
+                <td>RLX</td>
+                <td>20,631</td>
+                <td>$1,969.85</td>
+                <td class="positive">+7.14% <i class="fa fa-solid fa-caret-up fa-bounce"></i></td>
+              </tr>
+              <tr>
+                <tr>
+                  <td>DXY</td>
+                  <td>463</td>
+                  <td>$98.05</td>
+                  <td class="negative">-0.70% <i class="fa fa-solid fa-caret-down fa-bounce"></i></td>
+                </tr>
+                  <td>SPH</td>
+                  <td>7,631</td>
+                  <td>$2,555.50</td>
+                  <td class="positive">+1.43% <i class="fa fa-solid fa-caret-up fa-bounce"></i></td>
+                </tr>
+            </table>
+            <table>
+              <tr>
+                <th>Company Name</th>
+                <th>Shares</th>
+                <th>Price</th>
+                <th>Change</th>
+              </tr>
+              <tr>
+                <td>JR</td>
+                <td>5,672</td>
+                <td>$1,023.45</td>
+                <td class="positive">+3.75% <i class="fa fa-solid fa-caret-up fa-bounce"></i></td>
+              </tr>
+              <tr>
+                <td>MAR</td>
+                <td>987</td>
+                <td>$485.78</td>
+                <td class="negative">-1.20% <i class="fa fa-solid fa-caret-down fa-bounce"></i></td>
+              </tr>
+              <tr>
+                <td>PQR</td>
+                <td>10,246</td>
+                <td>$7,019.01</td>
+                <td class="positive">+5.55% <i class="fa fa-solid fa-caret-up fa-bounce"></i></td>
+              </tr>
+              <tr>
+                <td>MNO</td>
+                <td>3,210</td>
+                <td>$6,254.32</td>
+                <td class="positive">+2.30% <i class="fa fa-solid fa-caret-up fa-bounce"></i></td>
+              </tr>
+            </table>
+          </section>
+              <h2 id="header">Dashboard</h2>
+              <div id="shares" ></div>     
+        </div>
+    </div>
+    <div class="note-container">
+      <h3>Note</h3>
+     <div class="note-activation">
+      <input type="text" id="noteInput" placeholder="Write your note...">
+      <button onclick="saveNote()">Save</button>
+     </div>
+      <div id="notesContainer"></div>
+  </div>
+    <h2 align="center">News</h2>
+    <section id="news">
+      <div class="news"><img src="picture/news-1.jfif" alt="">
+     <h4>Understanding the Dynamics of the Stock Market</h4>
+     <p>The stock market, a cornerstone of the global financial system, serves as a platform for the buying and selling of securities, including stocks, bonds, and options. This dynamic marketplace operates through various mechanisms, influencing economic trends and investment strategies.</p>
+     </div>
+      <div class="news"><img src="picture/news-2.jfif" alt="">
+     <h4>Market Growth and Investment Trends</h4>
+<p>The stock market's historical performance, as exemplified by the S&P 500, has shown an average annual growth rate of approximately 10.5% since its establishment in the 1920s. While this serves as a barometer for market growth, the actual performance can vary due to factors such as market volatility and economic conditions. Furthermore, the dynamics of value stocks versus growth stoc</p>
+     </div>
+      <div class="news"><img src="picture/news-3.jfif" alt="">
+     <h4>The Function of Stock Markets</h4>
+<p>Stock markets facilitate the exchange of securities, allowing investors to buy and sell shares of publicly traded companies. In the United States, this trading primarily occurs on exchanges such as the New York Stock Exchange (NYSE) and the Nasdaq stock market. Additionally, over-the-counter (OTC) markets provide a decentralized platform for direct trading among participants, independent of exchange oversight 
+.</p>
+     </div>
+     </section>
+     <footer>
+      <div class="footer-content">
+          <div class="footer-logo">
+              <img src="picture/logo.ico" >
+          </div>
+          <div class="footer-info">
+              
+              <address>
+                Jebshit,Nabatieh,lebanon
+              </address>
+              <p>G-mail: abdullahtarhini55@gmail.com</p>
+ <a href="tel:+96170389556"> Phone : 70 389 556</a>
+          </div>
+          <div class="footer-links">
+            <div class="sponsor-images">
+                <img src="picture/sponsor1.jpg" alt="Sponsor 1">
+                <img src="picture/sponsor2.jpg" alt="Sponsor 2">
+                <img src="picture/sponsor3.png" alt="Sponsor 3">
+                <img src="picture/sponsor4.jpg" alt="Sponsor 3">
+                <img src="picture/sponsor5.jfif" alt="">
+                <img src="picture/sponsor5.jpg" alt="">
+                <img src="picture/sponsor7.jpg" alt="">
+            </div>
+        </div>
+      </div>
+      <div class="copyright">
+        <p>&copy; 2024 GoStock | Done by: Abdullah Nassier Tarhini <a href="https://www.abdullahtarhini-portfolio.rf.gd">Portfolio</a></p>
+      </div>
+  </footer>
+  <script>
+    function myFunction() {
+      var x = document.getElementById("mobile-responsive");
+      if (x.style.display === "block") {
+        x.style.display = "none";
+      } else {
+        x.style.display = "block";
+      }
+    }
+  </script>
+    <script>
+        const m = ["jan", "Feb", "march", "apr", "may","jun","july","aug","sep","oct","nov","dec"];
+                const p = [20,50,30,40,50,15,25,20,45,60,30,95];
+        // Define Data
+        const plotdata = [{
+                  x: m,
+                  y: p,
+                  mode: "lines",
+                  name: "البنك الرابي",
+                  marker: {color: "#2f9c6c"}
+                }];
+        
+        // Define Layout
+        const layout = {title: "RLX Company" };
+        
+        // Display using Plotly
+        Plotly.newPlot("shares", plotdata, layout);
+        </script>
+        <script>
+          function saveNote() {
+              var noteInput = document.getElementById('noteInput').value;
+              var notesContainer = document.getElementById('notesContainer');
+              var newNote = document.createElement('p');
+              newNote.textContent = noteInput;
+              newNote.classList.add('note-results'); // Adding the 'note' class to the <p> element
+              notesContainer.appendChild(newNote);
+              document.getElementById('noteInput').value = '';
+          }
+          
+          
+      </script>
+</body>
+</html>
