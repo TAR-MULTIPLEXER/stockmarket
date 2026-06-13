@@ -3,277 +3,1126 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
     <link rel="shortcut icon" href="picture/logo.ico" type="image/x-icon">
-    <script src="script.js" defer></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-yNlHdllG1OkNlFuKpFaVF11NoX9d/3bqEyj1Og2bvRK0da1Oc2yTHi/j0tnCfsrkIM91h9AjfXEZjmLr5Os5xg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <title>Go Market</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <title>GoStock - Stock Market Dashboard</title>
+    <style>
+        :root {
+            --primary: #2f9c6c;
+            --primary-dark: #248056;
+            --danger: #e74c3c;
+            --warning: #f39c12;
+            --bg: #f5f7fa;
+            --surface: #ffffff;
+            --text: #2c3e50;
+            --text-light: #7f8c8d;
+            --border: #e0e6ed;
+            --shadow: 0 2px 8px rgba(0,0,0,0.08);
+            --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
+            --sidebar-width: 260px;
+            --header-height: 70px;
+            --radius: 12px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: var(--surface);
+            box-shadow: var(--shadow);
+            z-index: 1000;
+            overflow-y: auto;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .logo img {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+        }
+
+        .investment-card {
+            margin: 20px;
+            padding: 20px;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            border-radius: var(--radius);
+            color: white;
+        }
+
+        .investment-card h4 {
+            font-size: 0.85rem;
+            opacity: 0.8;
+            margin-bottom: 8px;
+        }
+
+        .investment-amount {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .investment-change {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            background: rgba(47, 156, 108, 0.2);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: #4ade80;
+        }
+
+        .sidebar-nav {
+            padding: 20px 0;
+        }
+
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            color: var(--text);
+            text-decoration: none;
+            transition: var(--transition);
+            border-left: 3px solid transparent;
+        }
+
+        .sidebar-nav a:hover {
+            background: var(--bg);
+            border-left-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .sidebar-nav a i {
+            width: 20px;
+            text-align: center;
+        }
+        .main-content {
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            transition: margin-left 0.3s ease;
+        }
+        .header {
+            background: var(--surface);
+            padding: 0 30px;
+            height: var(--header-height);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .hamburger {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text);
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: var(--transition);
+        }
+
+        .hamburger:hover {
+            background: var(--bg);
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--bg);
+            padding: 10px 15px;
+            border-radius: 8px;
+            flex: 1;
+            max-width: 400px;
+        }
+
+        .search-box input {
+            border: none;
+            background: none;
+            outline: none;
+            flex: 1;
+            font-size: 0.95rem;
+        }
+
+        .search-box i {
+            color: var(--text-light);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .header-actions i {
+            font-size: 1.2rem;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .header-actions i:hover {
+            color: var(--primary);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .user-profile img {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-profile span {
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        .content {
+            padding: 30px;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--text);
+        }
+        .market-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .market-card {
+            background: var(--surface);
+            padding: 20px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .market-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .market-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .market-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .market-logo img {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+        }
+
+        .market-logo span {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .market-change {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .market-change.positive {
+            background: rgba(47, 156, 108, 0.1);
+            color: var(--primary);
+        }
+
+        .market-change.negative {
+            background: rgba(231, 76, 60, 0.1);
+            color: var(--danger);
+        }
+
+        .market-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .market-stat {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+        }
+
+        .market-stat-label {
+            color: var(--text-light);
+        }
+
+        .market-stat-value {
+            font-weight: 600;
+        }
+        .tables-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .table-container {
+            background: var(--surface);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: var(--bg);
+            padding: 12px 15px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.9rem;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover {
+            background: var(--bg);
+        }
+
+        .positive {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .negative {
+            color: var(--danger);
+            font-weight: 600;
+        }
+        .chart-container {
+            background: var(--surface);
+            padding: 20px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 40px;
+        }
+
+        #shares {
+            width: 100%;
+            height: 400px;
+        }
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .news-card {
+            background: var(--surface);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .news-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .news-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .news-content {
+            padding: 20px;
+        }
+
+        .news-content h4 {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            color: var(--text);
+        }
+
+        .news-content p {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+        .notes-container {
+            background: var(--surface);
+            padding: 20px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 40px;
+        }
+
+        .notes-input {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .notes-input input {
+            flex: 1;
+            padding: 10px 15px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .notes-input input:focus {
+            border-color: var(--primary);
+        }
+
+        .notes-input button {
+            padding: 10px 20px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .notes-input button:hover {
+            background: var(--primary-dark);
+        }
+
+        .notes-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .note-item {
+            padding: 12px;
+            background: var(--bg);
+            border-radius: 8px;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+        .footer {
+            background: var(--surface);
+            padding: 40px 30px 20px;
+            margin-top: 40px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .footer-logo img {
+            width: 80px;
+            height: 80px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+        }
+
+        .footer-info h4 {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+        }
+
+        .footer-info p,
+        .footer-info a {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .footer-info a:hover {
+            color: var(--primary);
+        }
+
+        .sponsors {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .sponsors img {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        .copyright a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+        .overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .hamburger {
+                display: block;
+            }
+
+            .search-box {
+                max-width: 300px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 0 15px;
+            }
+
+            .search-box {
+                display: none;
+            }
+
+            .user-profile span {
+                display: none;
+            }
+
+            .content {
+                padding: 20px 15px;
+            }
+
+            .section-title {
+                font-size: 1.3rem;
+            }
+
+            .market-grid {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 15px;
+            }
+
+            .tables-section {
+                grid-template-columns: 1fr;
+            }
+
+            .news-grid {
+                grid-template-columns: 1fr;
+            }
+
+            #shares {
+                height: 300px;
+            }
+
+            .footer {
+                padding: 30px 15px 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                padding: 0 10px;
+                height: 60px;
+            }
+
+            .hamburger {
+                font-size: 1.3rem;
+            }
+
+            .header-actions {
+                gap: 15px;
+            }
+
+            .header-actions i {
+                font-size: 1rem;
+            }
+
+            .content {
+                padding: 15px 10px;
+            }
+
+            .section-title {
+                font-size: 1.2rem;
+            }
+
+            .market-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .market-card {
+                padding: 15px;
+            }
+
+            .market-logo img {
+                width: 35px;
+                height: 35px;
+            }
+
+            .market-logo span {
+                font-size: 0.85rem;
+            }
+
+            .market-change {
+                font-size: 0.8rem;
+                padding: 3px 8px;
+            }
+
+            .market-stat {
+                font-size: 0.85rem;
+            }
+
+            th, td {
+                padding: 10px 12px;
+                font-size: 0.85rem;
+            }
+
+            #shares {
+                height: 250px;
+            }
+
+            .news-card img {
+                height: 180px;
+            }
+
+            .news-content {
+                padding: 15px;
+            }
+
+            .news-content h4 {
+                font-size: 1rem;
+            }
+
+            .news-content p {
+                font-size: 0.85rem;
+            }
+
+            .notes-input {
+                flex-direction: column;
+            }
+
+            .notes-input button {
+                width: 100%;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .sponsors {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .market-card {
+                padding: 12px;
+            }
+
+            .market-logo {
+                gap: 8px;
+            }
+
+            .market-logo img {
+                width: 30px;
+                height: 30px;
+            }
+
+            .market-logo span {
+                font-size: 0.8rem;
+            }
+
+            th, td {
+                padding: 8px 10px;
+                font-size: 0.8rem;
+            }
+
+            #shares {
+                height: 220px;
+            }
+        }
+    </style>
 </head>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
-<script src="https://www.gstatic.com/charts/loader.js"></script>
-<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="path/to/jquery.infinitescroll.min.js"></script>
 <body>
-    <div class="body">
-        <div class="sidenav" id="sidenavigation">
-           <div class="logo">
-            <span><img src="picture/logo.ico" alt="">  GoStock</span>
-           </div>
-           <div class="intro-nav">
-<div class="invest">
-    <p id="title">Toptal Investment </p>
-<b id="number">$53941.60</b><span id="percentage">+7.136% <i class="fas fa-arrow-up"></i> </span>
-</div>
-           </div>
-            <div class="links">
-                <a href="#"><i class="fas fa-home"></i> Home</a>
-            <a href="#shares"><i class="fas fa-chart-line"></i> Dashboard</a>
-            <a href="#"><i class="fas fa-wallet"></i> Wallet</a>
-            <a href="#news"><i class="fas fa-newspaper"></i> News</a>
-            <a href="#"><i class="fas fa-users"></i> Our Community</a>
-            <a href="#"><i class="fas fa-cog"></i> Settings</a>
-            <a href="tel:+96170389556"><i class="fas fa-phone"></i> Contact Us</a>
+    <div class="overlay" id="overlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <img src="picture/logo.ico" alt="GoStock">
+                <span>GoStock</span>
             </div>
         </div>
-        <a href="javascript:void(0);" class="bar" onclick="myFunction()">
-          <i class="fa fa-bars "></i>
-      </a>
-        <div class="mobile-container" id="mobile-responsive">
-          <div class="logo">
-            <span><img src="picture/logo.ico" alt="">  GoStock</span>
-           </div>
-           <div class="intro-nav">
-<div class="invest">
-    <p id="title">Toptal Investment </p>
-<b id="number">$53941.60</b><span id="percentage">+7.136% <i class="fas fa-arrow-up"></i> </span>
-</div>
-           </div>
-            <div class="links">
-                <a href="#"><i class="fas fa-home"></i> Home</a>
-            <a href="#shares"><i class="fas fa-chart-line"></i> Dashboard</a>
+        <div class="investment-card">
+            <h4>Toptal Investment</h4>
+            <div class="investment-amount">$53,941.60</div>
+            <div class="investment-change">
+                <i class="fas fa-arrow-up"></i>
+                <span>+7.136%</span>
+            </div>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="#"><i class="fas fa-home"></i> Home</a>
+            <a href="#dashboard"><i class="fas fa-chart-line"></i> Dashboard</a>
             <a href="#"><i class="fas fa-wallet"></i> Wallet</a>
             <a href="#news"><i class="fas fa-newspaper"></i> News</a>
-            <a href="#"><i class="fas fa-users"></i> Our Community</a>
+            <a href="#"><i class="fas fa-users"></i> Community</a>
             <a href="#"><i class="fas fa-cog"></i> Settings</a>
             <a href="tel:+96170389556"><i class="fas fa-phone"></i> Contact Us</a>
-            </div>
-            
-        </div>
-        <div class="main">
-           <section id="search-section">
-            <div class="search-container">
+        </nav>
+    </aside>
+    <div class="main-content">
+        <header class="header">
+            <button class="hamburger" id="hamburger">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <div class="search-box">
                 <i class="fas fa-search"></i>
-                <input type="search" class="search" id="search" placeholder="Search for shares ">
+                <input type="search" placeholder="Search for shares...">
             </div>
-            <div class="user-settings">
-              <i class="fa fa-regular fa-envelope fa-xl"></i>
-              <i class="fa-regular fa-bell fa-xl"></i>
-              <img src="picture/no-profile-icon.jpg" ><span id="user-account-text">user account</span>
+
+            <div class="header-actions">
+                <i class="fas fa-envelope"></i>
+                <i class="fas fa-bell"></i>
+                <div class="user-profile">
+                    <img src="picture/no-profile-icon.jpg" alt="User">
+                    <span>User Account</span>
+                </div>
             </div>
-           </section> 
-           <h2 id="header">Stock Market </h2>
-           <section id="market-container">
-            <div class="market">
-              <span class="shares-precentage" id="gain">+7.34% <i class="fa fa-solid fa-caret-up fa-bounce"></i></span>
-              <div class="market-logo">
-                <img src="picture/logo.ico" alt=""> Logo
-              </div>
-              <div id="total-shares">Shares: <span>77,587</span></div><br>
-              <div id="balance">balance: <span>$30,785,852.67</span></div>
+        </header>
+        <div class="content">
+            <h2 class="section-title">Stock Market</h2>
+            <div class="market-grid">
+                <div class="market-card">
+                    <div class="market-card-header">
+                        <div class="market-logo">
+                            <img src="picture/logo.ico" alt="Logo">
+                            <span>Logo</span>
+                        </div>
+                        <div class="market-change positive">
+                            <i class="fas fa-caret-up"></i>
+                            <span>+7.34%</span>
+                        </div>
+                    </div>
+                    <div class="market-stats">
+                        <div class="market-stat">
+                            <span class="market-stat-label">Shares</span>
+                            <span class="market-stat-value">77,587</span>
+                        </div>
+                        <div class="market-stat">
+                            <span class="market-stat-label">Balance</span>
+                            <span class="market-stat-value">$30,785,852.67</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="market-card">
+                    <div class="market-card-header">
+                        <div class="market-logo">
+                            <img src="picture/logo.ico" alt="Logo">
+                            <span>Logo</span>
+                        </div>
+                        <div class="market-change negative">
+                            <i class="fas fa-caret-down"></i>
+                            <span>-0.67%</span>
+                        </div>
+                    </div>
+                    <div class="market-stats">
+                        <div class="market-stat">
+                            <span class="market-stat-label">Shares</span>
+                            <span class="market-stat-value">1,236</span>
+                        </div>
+                        <div class="market-stat">
+                            <span class="market-stat-label">Balance</span>
+                            <span class="market-stat-value">$5,371.80</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="market-card">
+                    <div class="market-card-header">
+                        <div class="market-logo">
+                            <img src="picture/logo.ico" alt="Logo">
+                            <span>Logo</span>
+                        </div>
+                        <div class="market-change negative">
+                            <i class="fas fa-caret-down"></i>
+                            <span>-1.18%</span>
+                        </div>
+                    </div>
+                    <div class="market-stats">
+                        <div class="market-stat">
+                            <span class="market-stat-label">Shares</span>
+                            <span class="market-stat-value">5,406</span>
+                        </div>
+                        <div class="market-stat">
+                            <span class="market-stat-label">Balance</span>
+                            <span class="market-stat-value">$2,223.24</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="market-card">
+                    <div class="market-card-header">
+                        <div class="market-logo">
+                            <img src="picture/logo.ico" alt="Logo">
+                            <span>Logo</span>
+                        </div>
+                        <div class="market-change positive">
+                            <i class="fas fa-caret-up"></i>
+                            <span>+2.38%</span>
+                        </div>
+                    </div>
+                    <div class="market-stats">
+                        <div class="market-stat">
+                            <span class="market-stat-label">Shares</span>
+                            <span class="market-stat-value">12,102</span>
+                        </div>
+                        <div class="market-stat">
+                            <span class="market-stat-label">Balance</span>
+                            <span class="market-stat-value">$10,193,208.70</span>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="market">
-              <span class="shares-precentage" id="loss">-0.67% <i class="fa fa-solid fa-caret-down fa-bounce"></i></span>
-              <div class="market-logo">
-                <img src="picture/logo.ico" alt=""> Logo
-              </div>
-              <div id="total-shares">Shares: <span>1,236</span></div><br>
-              <div id="balance">balance: <span>$5,371.80</span></div>
+            <div class="tables-section">
+                <div class="table-container">
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Company</th>
+                                    <th>Shares</th>
+                                    <th>Price</th>
+                                    <th>Change</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>TNX</td>
+                                    <td>2,148</td>
+                                    <td>$178.00</td>
+                                    <td class="positive">+2.23% <i class="fas fa-caret-up"></i></td>
+                                </tr>
+                                <tr>
+                                    <td>RLX</td>
+                                    <td>20,631</td>
+                                    <td>$1,969.85</td>
+                                    <td class="positive">+7.14% <i class="fas fa-caret-up"></i></td>
+                                </tr>
+                                <tr>
+                                    <td>DXY</td>
+                                    <td>463</td>
+                                    <td>$98.05</td>
+                                    <td class="negative">-0.70% <i class="fas fa-caret-down"></i></td>
+                                </tr>
+                                <tr>
+                                    <td>SPH</td>
+                                    <td>7,631</td>
+                                    <td>$2,555.50</td>
+                                    <td class="positive">+1.43% <i class="fas fa-caret-up"></i></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Company</th>
+                                    <th>Shares</th>
+                                    <th>Price</th>
+                                    <th>Change</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>JR</td>
+                                    <td>5,672</td>
+                                    <td>$1,023.45</td>
+                                    <td class="positive">+3.75% <i class="fas fa-caret-up"></i></td>
+                                </tr>
+                                <tr>
+                                    <td>MAR</td>
+                                    <td>987</td>
+                                    <td>$485.78</td>
+                                    <td class="negative">-1.20% <i class="fas fa-caret-down"></i></td>
+                                </tr>
+                                <tr>
+                                    <td>PQR</td>
+                                    <td>10,246</td>
+                                    <td>$7,019.01</td>
+                                    <td class="positive">+5.55% <i class="fas fa-caret-up"></i></td>
+                                </tr>
+                                <tr>
+                                    <td>MNO</td>
+                                    <td>3,210</td>
+                                    <td>$6,254.32</td>
+                                    <td class="positive">+2.30% <i class="fas fa-caret-up"></i></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
-            <div class="market">
-              <span class="shares-precentage" id="loss">-1.18% <i class="fa fa-solid fa-caret-down fa-bounce"></i></span>
-              <div class="market-logo">
-                <img src="picture/logo.ico" alt=""> Logo
-              </div>
-              <div id="total-shares">Shares: <span>5,406</span></div><br>
-              <div id="balance">balance: <span>$2,223.24</span></div>
+            <h2 class="section-title" id="dashboard">Dashboard</h2>
+            <div class="chart-container">
+                <div id="shares"></div>
             </div>
-            <div class="market">
-              <span class="shares-precentage" id="gain">+2.38% <i class="fa fa-solid fa-caret-up fa-bounce"></i></span>
-              <div class="market-logo">
-                <img src="picture/logo.ico" alt=""> Logo
-              </div>
-              <div id="total-shares">Shares: <span>12,102</span></div><br>
-              <div id="balance">balance: <span>$10,193,208.70</span></div>
+            <div class="notes-container">
+                <h2 class="section-title">Notes</h2>
+                <div class="notes-input">
+                    <input type="text" id="noteinp" placeholder="Write your note...">
+                    <button onclick="savethenote()">Save</button>
+                </div>
+                <div class="notes-list" id="notecont"></div>
             </div>
-           </section>
-          <section id="table-section">
-            <table>
-              <tr>
-                <th>Company Name</th>
-                <th>Shares</th>
-                <th>Price</th>
-                <th>Change</th>
-              </tr>
-              <tr>
-                <td>TNX</td>
-                <td>2,148</td>
-                <td>$178.00</td>
-                <td class="positive">+2.23% <i class="fa fa-solid fa-caret-up fa-bounce"></i></td>
-              </tr>
-              <tr>
-                <td>RLX</td>
-                <td>20,631</td>
-                <td>$1,969.85</td>
-                <td class="positive">+7.14% <i class="fa fa-solid fa-caret-up fa-bounce"></i></td>
-              </tr>
-              <tr>
-                <tr>
-                  <td>DXY</td>
-                  <td>463</td>
-                  <td>$98.05</td>
-                  <td class="negative">-0.70% <i class="fa fa-solid fa-caret-down fa-bounce"></i></td>
-                </tr>
-                  <td>SPH</td>
-                  <td>7,631</td>
-                  <td>$2,555.50</td>
-                  <td class="positive">+1.43% <i class="fa fa-solid fa-caret-up fa-bounce"></i></td>
-                </tr>
-            </table>
-            <table>
-              <tr>
-                <th>Company Name</th>
-                <th>Shares</th>
-                <th>Price</th>
-                <th>Change</th>
-              </tr>
-              <tr>
-                <td>JR</td>
-                <td>5,672</td>
-                <td>$1,023.45</td>
-                <td class="positive">+3.75% <i class="fa fa-solid fa-caret-up fa-bounce"></i></td>
-              </tr>
-              <tr>
-                <td>MAR</td>
-                <td>987</td>
-                <td>$485.78</td>
-                <td class="negative">-1.20% <i class="fa fa-solid fa-caret-down fa-bounce"></i></td>
-              </tr>
-              <tr>
-                <td>PQR</td>
-                <td>10,246</td>
-                <td>$7,019.01</td>
-                <td class="positive">+5.55% <i class="fa fa-solid fa-caret-up fa-bounce"></i></td>
-              </tr>
-              <tr>
-                <td>MNO</td>
-                <td>3,210</td>
-                <td>$6,254.32</td>
-                <td class="positive">+2.30% <i class="fa fa-solid fa-caret-up fa-bounce"></i></td>
-              </tr>
-            </table>
-          </section>
-              <h2 id="header">Dashboard</h2>
-              <div id="shares" ></div>     
+            <h2 class="section-title" id="news">News</h2>
+            <div class="news-grid">
+                <div class="news-card">
+                    <img src="picture/news-1.jfif" alt="News 1">
+                    <div class="news-content">
+                        <h4>Understanding the Dynamics of the Stock Market</h4>
+                        <p>The stock market, a cornerstone of the global financial system, serves as a platform for the buying and selling of securities, including stocks, bonds, and options. This dynamic marketplace operates through various mechanisms, influencing economic trends and investment strategies.</p>
+                    </div>
+                </div>
+
+                <div class="news-card">
+                    <img src="picture/news-2.jfif" alt="News 2">
+                    <div class="news-content">
+                        <h4>Market Growth and Investment Trends</h4>
+                        <p>The stock market's historical performance, as exemplified by the S&P 500, has shown an average annual growth rate of approximately 10.5% since its establishment in the 1920s. While this serves as a barometer for market growth, the actual performance can vary due to factors such as market volatility and economic conditions.</p>
+                    </div>
+                </div>
+
+                <div class="news-card">
+                    <img src="picture/news-3.jfif" alt="News 3">
+                    <div class="news-content">
+                        <h4>The Function of Stock Markets</h4>
+                        <p>Stock markets facilitate the exchange of securities, allowing investors to buy and sell shares of publicly traded companies. In the United States, this trading primarily occurs on exchanges such as the New York Stock Exchange (NYSE) and the Nasdaq stock market.</p>
+                    </div>
+                </div>
+            </div>
         </div>
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <img src="picture/logo.ico" alt="GoStock">
+                </div>
+
+                <div class="footer-info">
+                    <h4>Contact Information</h4>
+                    <address>Jebshit, Nabatieh, Lebanon</address>
+                    <p>Email: abdullahtarhini55@gmail.com</p>
+                    <a href="tel:+96170389556">Phone: +961 70 389 556</a>
+                </div>
+
+                <div class="footer-info">
+                    <h4>Our Sponsors</h4>
+                    <div class="sponsors">
+                        <img src="picture/sponsor1.jpg" alt="Sponsor 1">
+                        <img src="picture/sponsor2.jpg" alt="Sponsor 2">
+                        <img src="picture/sponsor3.png" alt="Sponsor 3">
+                        <img src="picture/sponsor4.jpg" alt="Sponsor 4">
+                        <img src="picture/sponsor5.jfif" alt="Sponsor 5">
+                        <img src="picture/sponsor5.jpg" alt="Sponsor 6">
+                        <img src="picture/sponsor7.jpg" alt="Sponsor 7">
+                    </div>
+                </div>
+            </div>
+
+            <div class="copyright">
+                <p>&copy; 2024 GoStock | Done by: <a href="https://www.abdullahtarhini-portfolio.rf.gd">Abdullah Nassier Tarhini</a></p>
+            </div>
+        </footer>
     </div>
-    <div class="note-container">
-      <h3>Note</h3>
-     <div class="note-activation">
-      <input type="text" id="noteInput" placeholder="Write your note...">
-      <button onclick="saveNote()">Save</button>
-     </div>
-      <div id="notesContainer"></div>
-  </div>
-    <h2 align="center">News</h2>
-    <section id="news">
-      <div class="news"><img src="picture/news-1.jfif" alt="">
-     <h4>Understanding the Dynamics of the Stock Market</h4>
-     <p>The stock market, a cornerstone of the global financial system, serves as a platform for the buying and selling of securities, including stocks, bonds, and options. This dynamic marketplace operates through various mechanisms, influencing economic trends and investment strategies.</p>
-     </div>
-      <div class="news"><img src="picture/news-2.jfif" alt="">
-     <h4>Market Growth and Investment Trends</h4>
-<p>The stock market's historical performance, as exemplified by the S&P 500, has shown an average annual growth rate of approximately 10.5% since its establishment in the 1920s. While this serves as a barometer for market growth, the actual performance can vary due to factors such as market volatility and economic conditions. Furthermore, the dynamics of value stocks versus growth stoc</p>
-     </div>
-      <div class="news"><img src="picture/news-3.jfif" alt="">
-     <h4>The Function of Stock Markets</h4>
-<p>Stock markets facilitate the exchange of securities, allowing investors to buy and sell shares of publicly traded companies. In the United States, this trading primarily occurs on exchanges such as the New York Stock Exchange (NYSE) and the Nasdaq stock market. Additionally, over-the-counter (OTC) markets provide a decentralized platform for direct trading among participants, independent of exchange oversight 
-.</p>
-     </div>
-     </section>
-     <footer>
-      <div class="footer-content">
-          <div class="footer-logo">
-              <img src="picture/logo.ico" >
-          </div>
-          <div class="footer-info">
-              
-              <address>
-                Jebshit,Nabatieh,lebanon
-              </address>
-              <p>G-mail: abdullahtarhini55@gmail.com</p>
- <a href="tel:+96170389556"> Phone : 70 389 556</a>
-          </div>
-          <div class="footer-links">
-            <div class="sponsor-images">
-                <img src="picture/sponsor1.jpg" alt="Sponsor 1">
-                <img src="picture/sponsor2.jpg" alt="Sponsor 2">
-                <img src="picture/sponsor3.png" alt="Sponsor 3">
-                <img src="picture/sponsor4.jpg" alt="Sponsor 3">
-                <img src="picture/sponsor5.jfif" alt="">
-                <img src="picture/sponsor5.jpg" alt="">
-                <img src="picture/sponsor7.jpg" alt="">
-            </div>
-        </div>
-      </div>
-      <div class="copyright">
-        <p>&copy; 2024 GoStock | Done by: Abdullah Nassier Tarhini <a href="https://www.abdullahtarhini-portfolio.rf.gd">Portfolio</a></p>
-      </div>
-  </footer>
-  <script>
-    function myFunction() {
-      var x = document.getElementById("mobile-responsive");
-      if (x.style.display === "block") {
-        x.style.display = "none";
-      } else {
-        x.style.display = "block";
-      }
-    }
-  </script>
+
     <script>
-        const m = ["jan", "Feb", "march", "apr", "may","jun","july","aug","sep","oct","nov","dec"];
-                const p = [20,50,30,40,50,15,25,20,45,60,30,95];
-        // Define Data
-        const plotdata = [{
-                  x: m,
-                  y: p,
-                  mode: "lines",
-                  name: "البنك الرابي",
-                  marker: {color: "#2f9c6c"}
-                }];
-        
-        // Define Layout
-        const layout = {title: "RLX Company" };
-        
-        // Display using Plotly
-        Plotly.newPlot("shares", plotdata, layout);
-        </script>
-        <script>
-          function saveNote() {
-              var noteInput = document.getElementById('noteInput').value;
-              var notesContainer = document.getElementById('notesContainer');
-              var newNote = document.createElement('p');
-              newNote.textContent = noteInput;
-              newNote.classList.add('note-results'); // Adding the 'note' class to the <p> element
-              notesContainer.appendChild(newNote);
-              document.getElementById('noteInput').value = '';
-          }
-          
-          
-      </script>
+        const hamburger = document.getElementById('hamburger');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        hamburger.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        });
+
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+        document.querySelectorAll('.sidebar-nav a').forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth <= 1024) {
+                    sidebar.classList.remove('active');
+                    overlay.classList.remove('active');
+                }
+            });
+        });
+        function savethenote() {
+            const noteinp = document.getElementById('noteinp');
+            const notecont = document.getElementById('notecont');
+            const notetext = noteinp.value.trim();
+
+            if (notetext) {
+                const noteItem = document.createElement('div');
+                noteItem.className = 'note-item';
+                noteItem.textContent = notetext;
+                notecont.insertBefore(noteItem, notecont.firstChild);
+                noteinp.value = '';
+            }
+        }
+        document.getElementById('noteinp').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                savethenote();
+            }
+        });
+        const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        const values = [20, 50, 30, 40, 50, 15, 25, 20, 45, 60, 30, 95];
+
+        const dataplot = [{
+            x: months,
+            y: values,
+            type: 'scatter',
+            mode: 'lines+markers',
+            name: 'RLX Company',
+            line: { color: '#2f9c6c', width: 3, shape: 'spline' },
+            marker: { size: 8, color: '#2f9c6c' }
+        }];
+        const layout = {
+            title: {
+                text: 'RLX Company Performance',
+                font: { size: 16 }
+            },
+            xaxis: {
+                title: 'Month',
+                gridcolor: '#e0e6ed'
+            },
+            yaxis: {
+                title: 'Value',
+                gridcolor: '#e0e6ed'
+            },
+            margin: { t: 50, r: 20, b: 60, l: 60 },
+            hovermode: 'closest',
+            plot_bgcolor: 'rgba(0,0,0,0)',
+            paper_bgcolor: 'rgba(0,0,0,0)'
+        };
+        const config = {
+            responsive: true,
+            displayModeBar: false
+        };
+        ploty.newplot('shares', dataplot, layout, config);
+        window.addEventListener('resize', () => {
+            ploty.Plots.resize('shares');
+        });
+    </script>
 </body>
 </html>
