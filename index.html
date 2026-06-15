@@ -150,7 +150,7 @@
             z-index: 100;
         }
 
-        .hamburger {
+        .tognav {
             display: none;
             background: none;
             border: none;
@@ -162,7 +162,7 @@
             transition: var(--transition);
         }
 
-        .hamburger:hover {
+        .tognav:hover {
             background: var(--bg);
         }
 
@@ -571,7 +571,7 @@
                 margin-left: 0;
             }
 
-            .hamburger {
+            .tognav {
                 display: block;
             }
 
@@ -629,7 +629,7 @@
                 height: 60px;
             }
 
-            .hamburger {
+            .tognav {
                 font-size: 1.3rem;
             }
 
@@ -777,7 +777,7 @@
     </aside>
     <div class="main-content">
         <header class="header">
-            <button class="hamburger" id="hamburger">
+            <button class="tognav" id="tognav">
                 <i class="fas fa-bars"></i>
             </button>
 
@@ -1046,11 +1046,11 @@
     </div>
 
     <script>
-        const hamburger = document.getElementById('hamburger');
+        const tognav = document.getElementById('tognav');
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('overlay');
 
-        hamburger.addEventListener('click', () => {
+        tognav.addEventListener('click', () => {
             sidebar.classList.toggle('active');
             overlay.classList.toggle('active');
         });
@@ -1073,10 +1073,10 @@
             const notetext = noteinp.value.trim();
 
             if (notetext) {
-                const noteItem = document.createElement('div');
-                noteItem.className = 'note-item';
-                noteItem.textContent = notetext;
-                notecont.insertBefore(noteItem, notecont.firstChild);
+                const noteitem = document.createElement('div');
+                noteitem.className = 'note-item';
+                noteitem.textContent = notetext;
+                notecont.insertBefore(noteitem, notecont.firstChild);
                 noteinp.value = '';
             }
         }
