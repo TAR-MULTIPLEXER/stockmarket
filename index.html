@@ -1045,84 +1045,92 @@
         </footer>
     </div>
 
-    <script>
-        const tognav = document.getElementById('tognav');
-        const sidebar = document.getElementById('sidebar');
-        const overlay = document.getElementById('overlay');
+<script>
+    const tognav = document.getElementById('tognav');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
 
-        tognav.addEventListener('click', () => {
-            sidebar.classList.toggle('active');
-            overlay.classList.toggle('active');
-        });
+    tognav.addEventListener('click', () => {
+        sidebar.classList.toggle('active');
+        overlay.classList.toggle('active');
+    });
 
-        overlay.addEventListener('click', () => {
-            sidebar.classList.remove('active');
-            overlay.classList.remove('active');
-        });
-        document.querySelectorAll('.sidebar-nav a').forEach(link => {
-            link.addEventListener('click', () => {
-                if (window.innerWidth <= 1024) {
-                    sidebar.classList.remove('active');
-                    overlay.classList.remove('active');
-                }
-            });
-        });
-        function savethenote() {
-            const noteinp = document.getElementById('noteinp');
-            const notecont = document.getElementById('notecont');
-            const notetext = noteinp.value.trim();
+    overlay.addEventListener('click', () => {
+        sidebar.classList.remove('active');
+        overlay.classList.remove('active');
+    });
 
-            if (notetext) {
-                const noteitem = document.createElement('div');
-                noteitem.className = 'note-item';
-                noteitem.textContent = notetext;
-                notecont.insertBefore(noteitem, notecont.firstChild);
-                noteinp.value = '';
+    document.querySelectorAll('.sidebar-nav a').forEach(link => {
+        link.addEventListener('click', () => {
+            if (window.innerWidth <= 1024) {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
             }
+        });
+    });
+
+    function savethenote() {
+        const noteinp = document.getElementById('noteinp');
+        const notecont = document.getElementById('notecont');
+        const notetext = noteinp.value.trim();
+
+        if (notetext) {
+            const noteitem = document.createElement('div');
+            noteitem.className = 'note-item';
+            noteitem.textContent = notetext;
+            notecont.insertBefore(noteitem, notecont.firstChild);
+            noteinp.value = '';
         }
-        document.getElementById('noteinp').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                savethenote();
-            }
-        });
-        const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-        const values = [20, 50, 30, 40, 50, 15, 25, 20, 45, 60, 30, 95];
+    }
 
-        const dataplot = [{
-            x: months,
-            y: values,
-            type: 'scatter',
-            mode: 'lines+markers',
-            name: 'RLX Company',
-            line: { color: '#2f9c6c', width: 3, shape: 'spline' },
-            marker: { size: 8, color: '#2f9c6c' }
-        }];
-        const layout = {
-            title: {
-                text: 'RLX Company Performance',
-                font: { size: 16 }
-            },
-            xaxis: {
-                title: 'Month',
-                gridcolor: '#e0e6ed'
-            },
-            yaxis: {
-                title: 'Value',
-                gridcolor: '#e0e6ed'
-            },
-            margin: { t: 50, r: 20, b: 60, l: 60 },
-            hovermode: 'closest',
-            plot_bgcolor: 'rgba(0,0,0,0)',
-            paper_bgcolor: 'rgba(0,0,0,0)'
-        };
-        const config = {
-            responsive: true,
-            displayModeBar: false
-        };
-        ploty.newplot('shares', dataplot, layout, config);
-        window.addEventListener('resize', () => {
-            ploty.Plots.resize('shares');
-        });
-    </script>
+    document.getElementById('noteinp').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            savethenote();
+        }
+    });
+
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const values = [20, 50, 30, 40, 50, 15, 25, 20, 45, 60, 30, 95];
+
+    const dataplot = [{
+        x: months,
+        y: values,
+        type: 'scatter',
+        mode: 'lines+markers',
+        name: 'RLX Company',
+        line: { color: '#2f9c6c', width: 3, shape: 'spline' },
+        marker: { size: 8, color: '#2f9c6c' }
+    }];
+
+    const layout = {
+        title: {
+            text: 'RLX Company Performance',
+            font: { size: 16 }
+        },
+        xaxis: {
+            title: 'Month',
+            gridcolor: '#e0e6ed'
+        },
+        yaxis: {
+            title: 'Value',
+            gridcolor: '#e0e6ed'
+        },
+        margin: { t: 50, r: 20, b: 60, l: 60 },
+        hovermode: 'closest',
+        plot_bgcolor: 'rgba(0,0,0,0)',
+        paper_bgcolor: 'rgba(0,0,0,0)'
+    };
+
+    const config = {
+        responsive: true,
+        displayModeBar: false
+    };
+
+    Plotly.newPlot('shares', dataplot, layout, config);
+
+    window.addEventListener('resize', () => {
+        Plotly.Plots.resize('shares');
+    });
+</script>
 </body>
 </html>
